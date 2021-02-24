@@ -9,11 +9,16 @@
 </head>
 <body>
     
-    <input type="text" onclick="addquestion()">
+ 
 <script>
-    function addquestion(this){
-        socket.emit("addquestion",this.value)
+    var socket = io.connect();
+    function addquestion(ele){
+        socket.emit("addquestion",ele.value)
+        ele.value=""
     }
 </script>
+
+<input type="text" id="question" required>
+<input type="button" onclick="addquestion(document.getElementById('question'))" value="add">
 </body>
 </html>

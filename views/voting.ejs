@@ -8,10 +8,14 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <title>Document</title>
+
+    <style>
+
+    </style>
 </head>
 
 <body>
-    <div id="questions">
+    <div id="questions" >
 
     </div>
 
@@ -20,26 +24,32 @@
         var socket = io.connect();
         var allquestions = '<%- question %>';
         allquestions = JSON.parse(allquestions)
-
+        questions = document.getElementById("questions");
         Object.keys(allquestions).forEach(function (eachques) {
             Object.keys(allquestions[eachques]).forEach(function (option) {
                 if (option != "question") {
-                    var element = document.createElement("input");
+                    element = document.createElement("input");
                     element.type = "Button";
                     element.setAttribute("onclick", "vote(this)"); 
                     element.value = option + ": " + allquestions[eachques][option];
                     element.id = eachques + option
 
-                    questions = document.getElementById("questions");
+
                     questions.appendChild(element);
+
                 }
                 else{
-                    document.getElementById("questions").innerHTML=allquestions[eachques]["question"]
+               
+                    divele=document.createElement("lable");
+                    divele.innerHTML=allquestions[eachques]["question"]
+                    document.getElementById("questions").appendChild(divele)
                 }
-            })
 
-
-        })
+            });
+            var br = document.createElement("br");
+            questions.appendChild(br);
+            
+        });
 
         function vote(element) {
             socket.emit("vote", element.id)

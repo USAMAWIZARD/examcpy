@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="/socket.io/socket.io.js"></script>
+    <title>Document</title>
+</head>
+
+<body>
+    <div id="questions">
+
+    </div>
+
+
+    <script>
+        var socket = io.connect();
+        var allquestions = '<%- question %>';
+        allquestions = JSON.parse(allquestions)
+
+        Object.keys(allquestions).forEach(function (eachques) {
+            Object.keys(allquestions[eachques]).forEach(function (option) {
+                if (option != "question") {
+                    var element = document.createElement("input");
+                    element.type = "Button";
+                    element.setAttribute("onclick", "vote(this)"); 
+                    element.value = option + ": " + allquestions[eachques][option];
+                    element.id = eachques + option
+
+                    questions = document.getElementById("questions");
+                    questions.appendChild(element);
+                }
+                else{
+                    document.getElementById("questions").innerHTML=allquestions[eachques]["question"]
+                }
+            })
+
+
+        })
+
+        function vote(element) {
+            socket.emit("vote", element.id)
+        }
+
+
+        socket.on('incvote', data => {
+            document.getElementById(data).value=document.getElementById(data).value.slice(0,3) +(parseInt(document.getElementById(data).value.slice(3))+1)
+        });
+
+    </script>
+
+
+</body>
+
+</html>
